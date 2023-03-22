@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import {signInWithEmailAndPassword} from "firebase/auth"
 import { auth } from "../Firebase/Config";
+import { useNavigate } from "react-router-dom";
+
 
 
 const LoginBanner = () => {
+    const navigate = useNavigate()
+
+    const [loading, setLoading] = useState(false)
 
     const [formData, setFormData ] = useState({
         email: '', 
@@ -11,6 +16,7 @@ const LoginBanner = () => {
     })
 
     const {email, password} = formData
+    console.log(auth?.currentUser?.email)
 
     const onChange = (e) => {
         setFormData((prevState)=> ({
@@ -19,15 +25,24 @@ const LoginBanner = () => {
         }) )
     }
     
-    const login = async(e) => {
+    const login = (e) => {
+        e.preventDefault()
+        console.log(formData)
+        const logIn = async () =>{
         try {
-            e.preventDefault()
-            const response = await signInWithEmailAndPassword(auth, email, password)
-            console.log(response.user)
+            setLoading(true)
+            await signInWithEmailAndPassword(auth, email, password)
+            setFormData({email: "", password:""})
+            navigate('/')
         } catch (error) {
+            setLoading(true)
             console.error(error)
         }
-       
+        finally {
+            setLoading(false)
+        }
+     }
+         logIn()
     }
     
   return (
@@ -39,7 +54,7 @@ const LoginBanner = () => {
             <form className="flex flex-col gap-4" onSubmit={login}>
                 <input className="py-2 px-4 bg-slate-800 outline-none" type='email' name="email" value={email} onChange={onChange} placeholder='Email..' />
                 <input className="py-2 px-4 bg-slate-800 outline-none" type='password' name="password" value={password} onChange={onChange} placeholder="Password" />
-                <button className="bg-red-600 py-2 px-4">Login</button>
+                <button className="bg-red-600 py-2 px-4">{loading ? 'Logging in...' : 'Log In'}</button>
                 <div className="flex justify-between">
                     <div>
                         <input id="remember" type='checkbox' />

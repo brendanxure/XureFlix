@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
+import {} from ''
 
 const Row = ({title, Content}) => {
     console.log(Content)
+
+    const [like, setLike] = useState(false)
 
   return (
     <div>

@@ -1,6 +1,8 @@
+import { onAuthStateChanged } from 'firebase/auth'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllPopularmovies, getPopularmovies } from '../features/popular/popularSlice'
+import { auth } from '../Firebase/Config'
 
 const Banner = () => {
     const dispatch = useDispatch()
@@ -9,11 +11,13 @@ const Banner = () => {
    
 
     useEffect(()=>{
-        dispatch(getAllPopularmovies()) 
+        dispatch(getAllPopularmovies())
     }, [dispatch])
     
     const movie = movies[Math.floor(Math.random() * movies.length)]
     console.log(movie?.backdrop_path)
+
+   
     
 
 
