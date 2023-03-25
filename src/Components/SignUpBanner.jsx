@@ -1,8 +1,14 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { addDoc, doc, setDoc } from 'firebase/firestore'
 import React, { useState } from 'react'
-import { auth } from '../Firebase/Config'
+import { useNavigate } from 'react-router-dom'
+import { auth, db } from '../Firebase/Config'
 
 const SignUpBanner = () => {
+    const navigate = useNavigate()
+
+    const [loading, setLoading] = useState(false)
+
     const [formData, setFormData ] = useState({
         email: '', 
         password: ''
@@ -22,13 +28,20 @@ const SignUpBanner = () => {
         e.preventDefault()
         const submit = async() => {
             try {
-                await createUserWithEmailAndPassword(auth, email, password)   
+                setLoading(true)
+                await createUserWithEmailAndPassword(auth, email, password)
+                setFormData({email:"", password: ""})
+                setDoc(doc(db, 'userMovies', email), {
+                    savedShow : []
+                })
+                navigate('/')
             } catch (error) {
                 console.error(error)
+            } finally {
+                setLoading(false)
             }
         }
         submit()
-        setFormData({email:"", password: ""})
     }
   return (
     <div className='relative'>
@@ -39,7 +52,7 @@ const SignUpBanner = () => {
             <form className="flex flex-col gap-4" onSubmit={Login}>
                 <input className="py-2 px-4 bg-slate-800 outline-none" name='email' value={email} onChange={onChange} type='email' placeholder='Email..' />
                 <input className="py-2 px-4 bg-slate-800 outline-none" name='password' value={password} onChange={onChange} type='password' placeholder="Password" />
-                <button className="bg-red-600 py-2 px-4">Sign Up</button>
+                <button className="bg-red-600 py-2 px-4">{loading? 'Creating an account..' :'Sign Up'}</button>
                 <div className="flex justify-between">
                     <div>
                         <input id="remember" type='checkbox' />

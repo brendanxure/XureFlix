@@ -20,10 +20,10 @@ const Main = () => {
     }, [])
   return (
     <div className='mb-8'>
-        <Row title="Upcoming" Content={upcomingMovies} />
-        <Row title="Popular" Content={popular} />
-        <Row title="Top Rated" Content={Toprated}/>
-        <Row title="Latest" Content={Latest} />
+        <Row title="Upcoming" Content={upcomingMovies} id='1' />
+        <Row title="Popular" Content={popular} id='2' />
+        <Row title="Top Rated" Content={Toprated} id='3' />
+        <Row title="Latest" Content={Latest} id='4' />
     </div>
   )
 }
